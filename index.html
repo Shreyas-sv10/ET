@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ET Estimation Methods — Input Forms</title>
+  <!-- No CSS yet — ask for styles when ready -->
+</head>
+<body>
+  <header>
+    <h1>Estimation of Evapotranspiration (ET) — Methods</h1>
+    <p>
+      This page contains input forms for multiple ET estimation methods.
+      Each method has inputs and a <code>result</code> area where JS can show the computed ET.
+      Fill inputs and press the method's calculate button (JS to be added later).
+    </p>
+  </header>
+
+  <main>
+
+    <!-- 1) Crop coefficient approach -->
+    <section id="crop-coeff">
+      <h2>1. Calculating Crop ET: Crop Coefficient (K<sub>c</sub>) Approach</h2>
+      <p>
+        Formula (concept): <strong>ET<sub>c</sub> = K<sub>c</sub> × ET<sub>0</sub></strong>
+        where ET<sub>0</sub> is reference evapotranspiration (e.g., grass reference).
+      </p>
+      <form onsubmit="return false;">
+        <label for="kc">Crop coefficient K<sub>c</sub>:</label>
+        <input type="number" id="kc" step="0.01" placeholder="e.g. 0.85" />
+
+        <label for="et0_crop">Reference ET (ET<sub>0</sub>) [mm/day]:</label>
+        <input type="number" id="et0_crop" step="0.01" placeholder="e.g. 5.3" />
+
+        <button id="calc_crop">Calculate ET<sub>c</sub></button>
+      </form>
+      <div class="result" id="result_crop">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 2) Blaney-Criddle -->
+    <section id="blaney-criddle">
+      <h2>2. Blaney–Criddle Method</h2>
+      <p>
+        Typical form: ET = p × (0.46 × T + 8) × K (various variants exist).
+        Inputs below are the common ones used to compute the mean monthly ET.
+      </p>
+      <form onsubmit="return false;">
+        <label for="bc_mean_temp">Mean monthly temperature (T) [°C]:</label>
+        <input type="number" id="bc_mean_temp" step="0.1" />
+
+        <label for="bc_pct_daylight">Mean daily percentage of annual daytime (%) — p:</label>
+        <input type="number" id="bc_pct_daylight" step="0.01" placeholder="e.g. 12.5" />
+
+        <label for="bc_crop_factor">Crop factor (K) if used:</label>
+        <input type="number" id="bc_crop_factor" step="0.01" placeholder="optional" />
+
+        <button id="calc_bc">Calculate (placeholder)</button>
+      </form>
+      <div class="result" id="result_bc">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 3) Thornthwaite -->
+    <section id="thornthwaite">
+      <h2>3. Thornthwaite Method</h2>
+      <p>
+        Thornthwaite uses mean monthly temperature and heat index; usually requires monthly steps.
+      </p>
+      <form onsubmit="return false;">
+        <label for="th_temp">Mean monthly temperature (°C):</label>
+        <input type="number" id="th_temp" step="0.1" />
+
+        <label for="th_latitude">Latitude (decimal degrees) or daylight hours (optional):</label>
+        <input type="number" id="th_latitude" step="0.01" />
+
+        <label for="th_month">Month (1–12):</label>
+        <input type="number" id="th_month" min="1" max="12" />
+
+        <button id="calc_th">Calculate (placeholder)</button>
+      </form>
+      <div class="result" id="result_th">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 4) Hargreaves -->
+    <section id="hargreaves">
+      <h2>4. Hargreaves Equation</h2>
+      <p>
+        Hargreaves uses temperature range and extraterrestrial radiation R<sub>a</sub>:
+        <br/>
+        Example form: <code>ET<sub>0</sub> = 0.0023 × (T̄ + 17.8) × (T<sub>max</sub> − T<sub>min</sub>)<sup>0.5</sup> × R<sub>a</sub></code>
+      </p>
+      <form onsubmit="return false;">
+        <label for="harg_Tmean">Mean temperature T̄ [°C]:</label>
+        <input type="number" id="harg_Tmean" step="0.1" />
+
+        <label for="harg_Tmax">Maximum temperature T<sub>max</sub> [°C]:</label>
+        <input type="number" id="harg_Tmax" step="0.1" />
+
+        <label for="harg_Tmin">Minimum temperature T<sub>min</sub> [°C]:</label>
+        <input type="number" id="harg_Tmin" step="0.1" />
+
+        <label for="harg_Ra">Extraterrestrial radiation R<sub>a</sub> [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="harg_Ra" step="0.01" placeholder="optional if computed in JS" />
+
+        <button id="calc_harg">Calculate</button>
+      </form>
+      <div class="result" id="result_harg">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 5) Pan evaporation -->
+    <section id="pan-evap">
+      <h2>5. Pan Evaporation Method</h2>
+      <p>
+        Pan evaporation ET estimate: <code>ET<sub>0</sub> ≈ K<sub>pan</sub> × E<sub>pan</sub></code>, where K<sub>pan</sub> is a pan coefficient.
+      </p>
+      <form onsubmit="return false;">
+        <label for="pan_epan">Pan evaporation E<sub>pan</sub> [mm/day]:</label>
+        <input type="number" id="pan_epan" step="0.01" />
+
+        <label for="pan_kpan">Pan coefficient K<sub>pan</sub> (typical 0.6–0.8):</label>
+        <input type="number" id="pan_kpan" step="0.01" placeholder="e.g. 0.75" />
+
+        <button id="calc_pan">Calculate</button>
+      </form>
+      <div class="result" id="result_pan">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 6) Radiation method -->
+    <section id="radiation">
+      <h2>6. Radiation Method</h2>
+      <p>
+        These methods use net radiation (R<sub>n</sub>) and sometimes soil heat flux (G):
+        <br/>Example: <code>ET = (c × R<sub>n</sub>)/(λ)</code> (λ = latent heat of vaporization).
+      </p>
+      <form onsubmit="return false;">
+        <label for="rad_Rn">Net radiation R<sub>n</sub> [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="rad_Rn" step="0.01" />
+
+        <label for="rad_G">Soil heat flux G [MJ m⁻² day⁻¹] (optional):</label>
+        <input type="number" id="rad_G" step="0.01" />
+
+        <label for="rad_lambda">Latent heat of vaporization λ [MJ kg⁻¹] (default ≈ 2.45):</label>
+        <input type="number" id="rad_lambda" step="0.001" value="2.45" />
+
+        <button id="calc_rad">Calculate</button>
+      </form>
+      <div class="result" id="result_rad">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 7) Penman method -->
+    <section id="penman">
+      <h2>7. Penman Method</h2>
+      <p>
+        Penman combines energy balance and aerodynamic terms. Requires net radiation, vapour pressure, wind speed, slope of saturation vapour pressure curve (Δ), psychological constant (γ), etc.
+      </p>
+      <form onsubmit="return false;">
+        <label for="pen_Rn">Net radiation R<sub>n</sub> [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="pen_Rn" step="0.01" />
+
+        <label for="pen_G">Soil heat flux G [MJ m⁻² day⁻¹] (often ~0):</label>
+        <input type="number" id="pen_G" step="0.01" value="0" />
+
+        <label for="pen_T">Temperature T [°C]:</label>
+        <input type="number" id="pen_T" step="0.1" />
+
+        <label for="pen_es">Saturation vapour pressure e<sub>s</sub> [kPa]:</label>
+        <input type="number" id="pen_es" step="0.01" />
+
+        <label for="pen_ea">Actual vapour pressure e<sub>a</sub> [kPa]:</label>
+        <input type="number" id="pen_ea" step="0.01" />
+
+        <label for="pen_u2">Wind speed u<sub>2</sub> [m s⁻¹] at 2 m:</label>
+        <input type="number" id="pen_u2" step="0.1" />
+
+        <label for="pen_gamma">Psychrometric constant γ [kPa °C⁻¹]:</label>
+        <input type="number" id="pen_gamma" step="0.001" value="0.066" />
+
+        <button id="calc_penman">Calculate</button>
+      </form>
+      <div class="result" id="result_penman">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 8) Modified Penman -->
+    <section id="penman-modified">
+      <h2>8. Modified Penman Method</h2>
+      <p>
+        Modifications adapt aerodynamic/empirical constants for specific climates or crop surfaces. Inputs are similar to Penman with optional empirical tuning parameters.
+      </p>
+      <form onsubmit="return false;">
+        <label for="mp_Rn">Net radiation R<sub>n</sub> [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="mp_Rn" step="0.01" />
+
+        <label for="mp_u2">Wind speed u<sub>2</sub> [m s⁻¹]:</label>
+        <input type="number" id="mp_u2" step="0.1" />
+
+        <label for="mp_tuning">Optional tuning parameter:</label>
+        <input type="number" id="mp_tuning" step="0.01" placeholder="empirical constant" />
+
+        <button id="calc_penman_mod">Calculate</button>
+      </form>
+      <div class="result" id="result_penman_mod">Result: —</div>
+      <hr/>
+    </section>
+
+    <!-- 9) FAO Penman-Monteith -->
+    <section id="fao-pm">
+      <h2>9. FAO Penman–Monteith Equation (FAO-56)</h2>
+      <p>
+        Standardized FAO-56 form for reference ET (ETo) — requires net radiation, air temperature, wind speed at 2 m, saturation and actual vapour pressure, slope of vapour pressure curve, psychrometric constant, etc.
+        <br/>
+        Canonical FAO-56 equation (concept): <br/>
+        <code>
+          ET<sub>0</sub> = [0.408 Δ (R<sub>n</sub> − G) + γ (900/(T+273)) u<sub>2</sub> (e<sub>s</sub> − e<sub>a</sub>)] /
+          [Δ + γ (1 + 0.34 u<sub>2</sub>)]
+        </code>
+      </p>
+      <form onsubmit="return false;">
+        <label for="fao_Rn">Net radiation R<sub>n</sub> [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="fao_Rn" step="0.01" />
+
+        <label for="fao_G">Soil heat flux G [MJ m⁻² day⁻¹]:</label>
+        <input type="number" id="fao_G" step="0.01" value="0" />
+
+        <label for="fao_T">Mean air temperature T [°C]:</label>
+        <input type="number" id="fao_T" step="0.1" />
+
+        <label for="fao_u2">Wind speed u<sub>2</sub> [m s⁻¹] at 2 m:</label>
+        <input type="number" id="fao_u2" step="0.1" />
+
+        <label for="fao_es">Saturation vapour pressure e<sub>s</sub> [kPa]:</label>
+        <input type="number" id="fao_es" step="0.01" />
+
+        <label for="fao_ea">Actual vapour pressure e<sub>a</sub> [kPa]:</label>
+        <input type="number" id="fao_ea" step="0.01" />
+
+        <label for="fao_delta">Slope of saturation vapour pressure curve Δ [kPa °C⁻¹]:</label>
+        <input type="number" id="fao_delta" step="0.0001" />
+
+        <label for="fao_gamma">Psychrometric constant γ [kPa °C⁻¹]:</label>
+        <input type="number" id="fao_gamma" step="0.001" value="0.066" />
+
+        <button id="calc_fao">Calculate FAO-56 ET<sub>0</sub></button>
+      </form>
+      <div class="result" id="result_fao">Result: —</div>
+      <hr/>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>
+      Tips: When you want JS, tell me which method(s) you want computed and I’ll add calculation
+      scripts that read these inputs and fill the result divs. Also tell me the visual style you want
+      (simple, modern card UI, academic print, dark mode, etc.) and I’ll provide CSS.
+    </p>
+  </footer>
+
+  <!-- Placeholder where JS will go later. Each button has an id so JS can add event listeners.
+       Example: document.getElementById('calc_harg').addEventListener('click', computeHargreaves);
+  -->
+</body>
+</html>
